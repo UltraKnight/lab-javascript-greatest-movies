@@ -3,8 +3,9 @@ function getAllDirectors(movies) {
     return movies.map(movie => movie.director);
 }
 
-// _Bonus_: It seems some of the directors had directed multiple movies so they will pop up multiple times in the array of directors. How could you "clean" a bit this array and make it unified (without duplicates)?
-
+// _Bonus_: It seems some of the directors had directed multiple movies so they will pop up multiple times in the array of directors.
+//How could you "clean" a bit this array and make it unified (without duplicates)?
+const cleanDouble = doubleArr => [... new Set(doubleArr)]; //... -> spread operator
 
 // Iteration 2: Steven Spielberg. The best? - How many drama movies did STEVEN SPIELBERG direct?
 const howManyMovies = (movies) => {
@@ -60,5 +61,39 @@ const orderAlphabetically = movies => {
 }
 
 // BONUS - Iteration 7: Time Format - Turn duration of the movies from hours to minutes
+const turnHoursToMinutes = (movies) => {
+    let timeString = [];
+    let convertedHours = 0;
+    let min = 0;
+
+    let moviesReadable = movies.map(object => ({ ...object })) //copy without reference
+
+     for (let i = 0; i < moviesReadable.length; i++) {
+        convertedHours = 0;
+        min = 0;
+        if(typeof moviesReadable[i].duration === 'string') { //if this movie has a valid duration
+            timeString = moviesReadable[i].duration.split(' ');
+        } else {
+            timeString = ['0'];
+        }
+
+        if(timeString.length > 1) {
+            timeString.forEach(time => time.replace(/[^0-9] /g, '')); //remove duration letters
+            convertedHours = parseInt(timeString[0]) * 60; //hours to integer minutes
+            min = parseInt(timeString[1]); //mins to integer
+        } else if(timeString.length === 1) {
+            if(timeString[0].endsWith('min')) { //verify if the duration has less than one hour
+                timeString.forEach(time => time.replace(/[^0-9] /g, ''));
+                min = parseInt(timeString[0]);
+            } else { //duration is full hour
+                timeString.forEach(time => time.replace(/[^0-9] /g, ''));
+                convertedHours = parseInt(timeString[0]) * 60;
+            }
+        }
+
+        moviesReadable[i].duration = convertedHours + min; //change the duration value of the object inside the array
+    }
+    return moviesReadable;
+}
 
 // BONUS - Iteration 8: Best yearly rate average - Best yearly rate average
