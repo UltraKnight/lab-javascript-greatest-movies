@@ -97,3 +97,38 @@ const turnHoursToMinutes = (movies) => {
 }
 
 // BONUS - Iteration 8: Best yearly rate average - Best yearly rate average
+const bestYearAvg = movies => {
+    if(! movies.length) {
+        return null;
+    }
+
+    //stores years as keys and averages as values of every year in the main array
+    let yearRateSum = {};
+    let allYears = [];
+    let allAvg = [];
+    let bestYear = '0';
+    let bestAvg = 0;
+
+    movies.slice(0).forEach(movie => {
+        //if this year hasn't yet been added then create the proper property in the object with
+        if(! yearRateSum[movie.year]) {            
+            yearRateSum[movie.year] = [0, 0];
+        }
+
+        yearRateSum[movie.year][0] += movie.rate; //sum of rates of that year
+        yearRateSum[movie.year][1]++; //add one for every movie in that year -> used in the average calculation
+
+    });
+
+    for (const year in yearRateSum) {
+        //the averages are add at the same position as their corresponding year each one in its proper array
+        allYears.push(year);
+        allAvg.push(yearRateSum[year][0]/yearRateSum[year][1]); //calculates the avg before adding to the array
+    }
+
+    bestAvg = allAvg.reduce((prev, curr) => prev > curr ? prev : curr); //find the highest value
+    //get the corresponding year (it is in the same position the previous value -> bestAvg)
+    bestYear = allYears[allAvg.indexOf(bestAvg)];
+
+    return `The best year was ${bestYear} with an average rate of ${bestAvg}`;
+}
